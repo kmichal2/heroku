@@ -68,15 +68,13 @@ def message():
   auth_token = os.environ.get("AUTH_TOKEN", AUTH_TOKEN)
   from_value = request.values.get('From')
   to_value = request.values.get('To')
-  if not (from_value and to_value):
-    return str(resp.say("Invalid request"))
+  #if not (from_value and to_value):
+  #  return str(resp.say("Invalid request"))
 
   client = TwilioRestClient(account_sid, auth_token)
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   message = "Hello!"
-  resp = twilio.twiml.Response()
-  # resp.message(message)
-  message = client.messages.create(to=to_value, from_=from_value, body="Hello there!")
+  message = client.messages.create(to=account_sid, from_=account_sid, body="Hello there!")
   return str(resp)
   
 @app.route("/hello", methods=['GET', 'POST'])
