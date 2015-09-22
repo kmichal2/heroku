@@ -59,6 +59,9 @@ def call():
   else:
     # client -> PSTN
     resp.dial(to, callerId=caller_id)
+    
+  resp.say("The call failed, or the remote party hung up. Goodbye.")
+
   return str(resp)
   
 @app.route("/message", methods=['GET', 'POST'])
@@ -72,10 +75,7 @@ def message():
   #  return str(resp.say("Invalid request"))
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   client = TwilioRestClient(account_sid, auth_token)
-  #message = client.messages.create(to="+15147308841", from_=caller_id, body="Hello!")
-  #resp.dial(to="+15147308841", callerId=caller_id)
-  resp.dial(callerId=caller_id).client(CLIENT)
-  resp.say("The call failed, or the remote party hung up. Goodbye.")
+  message = client.messages.create(to="+15147308841", from_=caller_id, body="Hello!")
   return str(resp)
 
 @app.route("/hello", methods=['GET', 'POST'])
