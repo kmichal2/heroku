@@ -72,9 +72,8 @@ def message():
   #  return str(resp.say("Invalid request"))
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   client = TwilioRestClient(account_sid, auth_token)
-  message = client.messages.create(to=caller_id, from_=caller_id, body="Hello!")
-  return str(resp)
-  
+  message = client.messages.create(to="+15147308841", from_="+14386000872", body="Hello!")
+
 @app.route("/hello", methods=['GET', 'POST'])
 def hello():
   """Respond to incoming calls with a simple text message."""
