@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request
 from twilio.util import TwilioCapability
+from twilio.rest import TwilioRestClient
 import twilio.twiml
 
 # Account Sid and Auth Token can be found in your account dashboard
@@ -58,6 +59,31 @@ def call():
   else:
     # client -> PSTN
     resp.dial(to, callerId=caller_id)
+  return str(resp)
+  
+@app.route("/message", methods=['GET', 'POST'])
+def message():
+  account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
+  auth_token = os.environ.get("AUTH_TOKEN", AUTH_TOKEN)
+  from_value = request.values.get('From')
+  to_value = request.values.get('To')
+  if not (from_value and to_value):
+    return str(resp.say("Invalid request"))
+
+  client = TwilioRestClient(account_sid, auth_token)
+  caller_id = os.environ.get("CALLER_ID", CALLER_ID)
+  message = "Hello!"
+  resp = twilio.twiml.Response()
+  # resp.message(message)
+  message = client.messages.create(to=to_value, from_=from_value, body="Hello there!")
+  return str(resp)
+  
+@app.route("/welcome", methods=['GET', 'POST'])
+def hello():
+  """Respond to incoming calls with a simple text message."""
+  message = "Welcome to Twilio!"
+  resp = twilio.twiml.Response()
+  resp.message(message)
   return str(resp)
 
 @app.route('/', methods=['GET', 'POST'])
