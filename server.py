@@ -63,6 +63,7 @@ def call():
   
 @app.route("/message", methods=['GET', 'POST'])
 def message():
+  resp = twilio.twiml.Response()
   account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
   auth_token = os.environ.get("AUTH_TOKEN", AUTH_TOKEN)
   from_value = request.values.get('From')
@@ -78,7 +79,7 @@ def message():
   message = client.messages.create(to=to_value, from_=from_value, body="Hello there!")
   return str(resp)
   
-@app.route("/welcome", methods=['GET', 'POST'])
+@app.route("/hello", methods=['GET', 'POST'])
 def hello():
   """Respond to incoming calls with a simple text message."""
   message = "Welcome to Twilio!"
