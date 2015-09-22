@@ -73,7 +73,7 @@ def message():
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   client = TwilioRestClient(account_sid, auth_token)
   #message = client.messages.create(to="+15147308841", from_=caller_id, body="Hello!")
-  resp.dial("+15147308841")
+  resp.dial(to="+15147308841", callerId=caller_id)
   resp.say("The call failed, or the remote party hung up. Goodbye.")
   return str(resp)
 
