@@ -71,7 +71,7 @@ def message():
   auth_token = os.environ.get("AUTH_TOKEN", AUTH_TOKEN)
   from_value = request.values.get('From')
   to_val = request.values.get('To')
-  if not (from_value and to_value):
+  if not (from_value and to_val):
     return str(resp.say("Invalid request"))
     
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
