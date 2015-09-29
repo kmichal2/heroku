@@ -69,6 +69,8 @@ def message():
   resp = twilio.twiml.Response()
   account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
   auth_token = os.environ.get("AUTH_TOKEN", AUTH_TOKEN)
+  app_sid = os.environ.get("APP_SID", APP_SID)
+  
   from_value = request.values.get('From')
   to_val = request.values.get('To')
   if not (from_value and to_val):
@@ -77,7 +79,16 @@ def message():
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   client = TwilioRestClient(account_sid, auth_token)
   body_txt = request.values.get('Body')
-  message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
+  #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
+  try:
+    twilio_client.calls.create(from_=from_value,
+                                to=to_val,
+                                application_sid=app_sid)
+    except Exception as e:
+        app.logger.error(e)
+        return jsonify({'error': str(e)})
+
+  resp.message(body_txt)
   return str(resp)
 
 @app.route("/hello", methods=['GET', 'POST'])
