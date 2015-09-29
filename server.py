@@ -59,7 +59,7 @@ def call():
     resp.dial(callerId=from_value).client(to[7:])
   else:
     # client -> PSTN
-    resp.dial(to, callerId=caller_id)
+    #resp.dial(to, callerId=caller_id)
   
   resp.say("Thank you for contacting our sales department. Goodbye.", voice='alice')
 
@@ -82,8 +82,8 @@ def message():
   body_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
   try:
-    resp.dial(to_val, callerId=caller_id)
-    #client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")
+    #resp.dial(to_val, callerId=caller_id)
+    client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")
     resp.say("Thank you for contacting our sales department. Goodbye.", voice='alice')
   except Exception as e:
     app.logger.error(e)
