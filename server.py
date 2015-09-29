@@ -77,7 +77,7 @@ def message():
   try:
     #resp.dial(to_val, callerId=caller_id)
     client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")
-    resp.say(body_txt, voice='alice')
+    #resp.say(body_txt, voice='alice')
   except Exception as e:
     app.logger.error(e)
     return jsonify({'error': str(e)})  
