@@ -83,7 +83,7 @@ def message():
   try:
     twilio_client.calls.create(from_=from_value,
                                 to=to_val,
-                                application_sid=app_sid)
+                                url='https://still-taiga-4190.herokuapp.com/call')
     except Exception as e:
         app.logger.error(e)
         return jsonify({'error': str(e)})
