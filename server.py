@@ -44,6 +44,10 @@ def call():
   """        2. To value specifies target. When call is coming """
   """           from PSTN, To value is ignored and call is     """
   """           routed to client named CLIENT                  """
+  account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID) 
+  auth_token = os.environ.get("AUTH_TOKEN", AUTH_TOKEN) 
+  app_sid = os.environ.get("APP_SID", APP_SID) 
+
   resp = twilio.twiml.Response()
   from_value = request.values.get('From')
   to = request.values.get('To')
