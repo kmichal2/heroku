@@ -66,6 +66,7 @@ def call():
   
 @app.route('/voice', methods=['GET', 'POST'])
 def voice():
+  resp = twilio.twiml.Response()
   resp.say(body_txt, voice='alice')
   return str(resp)
   
