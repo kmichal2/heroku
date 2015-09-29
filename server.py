@@ -81,7 +81,7 @@ def message():
   body_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
   
-  twilio_client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/message")
+  client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/message")
 
   resp.message(body_txt)
   return str(resp)
