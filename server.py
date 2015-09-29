@@ -64,13 +64,13 @@ def call():
 
   return str(resp)
   
-@app.route('/voice', methods=['GET', 'POST'])
+@app.route('/voice', methods=['POST'])
 def voice():
   resp = twilio.twiml.Response()
   resp.say(body_txt, voice='alice')
   return str(resp)
   
-@app.route("/message", methods=['GET', 'POST'])
+@app.route("/message", methods=['POST'])
 def message():
   resp = twilio.twiml.Response()
   account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
