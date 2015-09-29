@@ -44,21 +44,23 @@ def call():
   """        2. To value specifies target. When call is coming """
   """           from PSTN, To value is ignored and call is     """
   """           routed to client named CLIENT                  """
-  account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID) 
-  auth_token = os.environ.get("AUTH_TOKEN", AUTH_TOKEN) 
-  app_sid = os.environ.get("APP_SID", APP_SID) 
-
   resp = twilio.twiml.Response()
   from_value = request.values.get('From')
-  to_val = request.values.get('To')
-  if not (from_value and to_val):
+  to = request.values.get('To')
+  if not (from_value and to):
     return str(resp.say("Invalid request"))
   from_client = from_value.startswith('client')
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
-  # client -> PSTN
-  #resp.dial(to=to_val, callerId=caller_id)
-  client = TwilioRestClient(account_sid, auth_token)
-  client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")  
+  if not from_client:
+    # PSTN -> client
+    resp.dial(callerId=from_value).client(CLIENT)
+  elif to.startswith("client:"):
+    # client -> client
+    resp.dial(callerId=from_value).client(to[7:])
+  else:
+    # client -> PSTN
+    resp.dial(to, callerId=caller_id)
+  
   resp.say("Thank you for contacting our sales department. Goodbye.", voice='alice')
 
   return str(resp)
@@ -80,8 +82,8 @@ def message():
   body_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
   try:
-    #client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")
-    resp.say("Thank you for contacting our sales department", voice='alice')
+    client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/message")
+    resp.say(body_txt, voice='alice')
   except Exception as e:
     app.logger.error(e)
     return jsonify({'error': str(e)})  
