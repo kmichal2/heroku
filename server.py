@@ -14,6 +14,7 @@ APP_SID = 'APZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
 
 CALLER_ID = '+12345678901'
 CLIENT = 'jenny'
+body_txt ="hello from Twilio"
 
 app = Flask(__name__)
 
@@ -52,7 +53,7 @@ def call():
   from_client = from_value.startswith('client')
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
 
-  resp.say("Thank you for contacting our sales department. Goodbye.", voice='alice')
+  resp.say(body_txt, voice='alice')
 
   return str(resp)
   
@@ -70,6 +71,7 @@ def message():
     
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   client = TwilioRestClient(account_sid, auth_token)
+  global body_txt
   body_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
   try:
