@@ -82,7 +82,7 @@ def message():
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
   try:
     client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/message")
-    client.say("Thank you for contacting our sales department", voice='alice')
+    #client.say("Thank you for contacting our sales department", voice='alice')
   except Exception as e:
     app.logger.error(e)
     return jsonify({'error': str(e)})  
