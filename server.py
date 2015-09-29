@@ -88,7 +88,7 @@ def message():
     app.logger.error(e)
     return jsonify({'error': str(e)})  
 
-  resp.message(body_txt)
+  #resp.message(body_txt)
   return str(resp)
 
 @app.route("/hello", methods=['GET', 'POST'])
