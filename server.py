@@ -80,13 +80,8 @@ def message():
   client = TwilioRestClient(account_sid, auth_token)
   body_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
-  try:
-    twilio_client.calls.create(from_=from_value,
-                                to=to_val,
-                                url='https://still-taiga-4190.herokuapp.com/call')
-    except Exception as e:
-        app.logger.error(e)
-        return jsonify({'error': str(e)})
+  
+  twilio_client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/message")
 
   resp.message(body_txt)
   return str(resp)
