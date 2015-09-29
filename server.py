@@ -52,9 +52,10 @@ def call():
   from_client = from_value.startswith('client')
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   # client -> PSTN
-  resp.dial(to, callerId=caller_id)
-    
-  resp.say("The call failed, or the remote party hung up. Goodbye.", voice='alice')
+  #resp.dial(to, callerId=caller_id)
+  client = TwilioRestClient(account_sid, auth_token)
+  client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")  
+  resp.say("Thank you for contacting our sales department. Goodbye.", voice='alice')
 
   return str(resp)
   
