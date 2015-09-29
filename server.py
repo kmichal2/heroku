@@ -50,13 +50,13 @@ def call():
 
   resp = twilio.twiml.Response()
   from_value = request.values.get('From')
-  to = request.values.get('To')
-  if not (from_value and to):
+  to_val = request.values.get('To')
+  if not (from_value and to_val):
     return str(resp.say("Invalid request"))
   from_client = from_value.startswith('client')
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   # client -> PSTN
-  #resp.dial(to, callerId=caller_id)
+  #resp.dial(to=to_val, callerId=caller_id)
   client = TwilioRestClient(account_sid, auth_token)
   client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")  
   resp.say("Thank you for contacting our sales department. Goodbye.", voice='alice')
