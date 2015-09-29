@@ -52,9 +52,21 @@ def call():
     return str(resp.say("Invalid request"))
   from_client = from_value.startswith('client')
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
+  if not from_client:
+    # PSTN -> client
+    resp.dial(callerId=from_value).client(CLIENT)
+  elif to.startswith("client:"):
+    # client -> client
+    resp.dial(callerId=from_value).client(to[7:])
+  else:
+    # client -> PSTN
+    resp.dial(to, callerId=caller_id)
 
+  return str(resp)
+  
+@app.route('/voice', methods=['GET', 'POST'])
+def voice():
   resp.say(body_txt, voice='alice')
-
   return str(resp)
   
 @app.route("/message", methods=['GET', 'POST'])
@@ -76,7 +88,7 @@ def message():
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
   try:
     #resp.dial(to_val, callerId=caller_id)
-    client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/call")
+    client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/voice")
     #resp.say(body_txt, voice='alice')
   except Exception as e:
     app.logger.error(e)
