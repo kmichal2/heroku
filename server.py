@@ -107,6 +107,19 @@ def message():
 
   #resp.message(body_txt)
   return str(resp)
+  
+@app.route("/receive_sms/", methods=['GET','POST'])
+def receive_sms():
+  # Sender's phone numer
+  from_number = request.values.get('From')
+  # Receiver's phone number - Plivo number
+  to_number = request.values.get('To')
+  # The text which was received
+  text = request.values.get('Text')
+  resp = twilio.twiml.Response()
+  resp.say("from:"+from_number+" to:"+to_number+" text="+text)
+  return str(resp)
+
 
 @app.route("/hello", methods=['GET', 'POST'])
 def hello():
