@@ -71,6 +71,7 @@ def call():
 def voice():
   resp = twilio.twiml.Response()
   resp.say(message_txt, voice='alice')
+  resp.play("http://demo.twilio.com/hellomonkey/monkey.mp3")
   return str(resp)
   
 @app.route("/message", methods=['GET', 'POST'])
@@ -94,13 +95,13 @@ def message():
     try:
       #resp.dial(to_val, callerId=caller_id)
       #resp.say(message_txt, voice='alice')
-      client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/message")
+      client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/voice")
       #message = client.messages.create(to=to_val, from_=from_value, body=message_txt)
     except Exception as e:
       app.logger.error(e)
       return jsonify({'error': str(e)}) 
   elif request.method == 'GET':
-      #message_txt = request.values.get('Body')
+      message_txt = request.values.get('Body')
       resp.dial(to_val, callerId=caller_id)
       resp.say(message_txt, voice='alice')
 
