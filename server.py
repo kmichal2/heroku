@@ -117,7 +117,7 @@ def receive_sms():
   # The text which was received
   text = request.values.get('Text')
   resp = twilio.twiml.Response()
-  resp.say(text)
+  resp.say("text="+text)
   return str(resp)
 
 @app.route("/hello", methods=['GET', 'POST'])
