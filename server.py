@@ -87,10 +87,10 @@ def message():
     
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   client = TwilioRestClient(account_sid, auth_token)
-  global message_txt
-  message_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=message_txt)
   if request.method == 'POST':
+    global message_txt
+    message_txt = request.values.get('Body')
     try:
       #resp.dial(to_val, callerId=caller_id)
       #resp.say(message_txt, voice='alice')
@@ -100,6 +100,7 @@ def message():
       app.logger.error(e)
       return jsonify({'error': str(e)}) 
   elif request.method == 'GET':
+      #message_txt = request.values.get('Body')
       resp.dial(to_val, callerId=caller_id)
       resp.say(message_txt, voice='alice')
 
