@@ -14,7 +14,7 @@ APP_SID = 'APZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
 
 CALLER_ID = '+12345678901'
 CLIENT = 'jenny'
-body_txt ="hello from Twilio"
+message_txt ="hello from Twilio"
 
 app = Flask(__name__)
 
@@ -46,31 +46,34 @@ def call():
   """           from PSTN, To value is ignored and call is     """
   """           routed to client named CLIENT                  """
   resp = twilio.twiml.Response()
-  from_value = request.values.get('From')
-  to = request.values.get('To')
-  if not (from_value and to):
-    return str(resp.say("Invalid request"))
-  from_client = from_value.startswith('client')
-  caller_id = os.environ.get("CALLER_ID", CALLER_ID)
-  if not from_client:
-    # PSTN -> client
-    resp.dial(callerId=from_value).client(CLIENT)
-  elif to.startswith("client:"):
-    # client -> client
-    resp.dial(callerId=from_value).client(to[7:])
-  else:
-    # client -> PSTN
-    resp.dial(to, callerId=caller_id)
-
+  if request.method == 'POST':
+    from_value = request.values.get('From')
+    to = request.values.get('To')
+    if not (from_value and to):
+      return str(resp.say("Invalid request"))
+    from_client = from_value.startswith('client')
+    caller_id = os.environ.get("CALLER_ID", CALLER_ID)
+    if not from_client:
+      # PSTN -> client
+      resp.dial(callerId=from_value).client(CLIENT)
+    elif to.startswith("client:"):
+      # client -> client
+      resp.dial(callerId=from_value).client(to[7:])
+    else:
+      # client -> PSTN
+      resp.dial(to, callerId=caller_id)
+  elif request.method == 'GET':
+    resp.say(message_txt, voice='alice')
+    
   return str(resp)
   
 @app.route('/voice', methods=['POST'])
 def voice():
   resp = twilio.twiml.Response()
-  resp.say(body_txt, voice='alice')
+  resp.say(message_txt, voice='alice')
   return str(resp)
   
-@app.route("/message", methods=['POST'])
+@app.route("/message", methods=['GET'])
 def message():
   resp = twilio.twiml.Response()
   account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
@@ -84,13 +87,13 @@ def message():
     
   caller_id = os.environ.get("CALLER_ID", CALLER_ID)
   client = TwilioRestClient(account_sid, auth_token)
-  global body_txt
-  body_txt = request.values.get('Body')
+  global message_txt
+  message_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
   try:
-    #resp.dial(to_val, callerId=caller_id)
-    client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/voice")
-    #resp.say(body_txt, voice='alice')
+    resp.dial(to_val, callerId=caller_id)
+    #client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/voice")
+    resp.say(message_txt, voice='alice')
   except Exception as e:
     app.logger.error(e)
     return jsonify({'error': str(e)})  
