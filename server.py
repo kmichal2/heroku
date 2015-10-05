@@ -73,7 +73,7 @@ def voice():
   resp.say(message_txt, voice='alice')
   return str(resp)
   
-@app.route("/message", methods=['GET'])
+@app.route("/message", methods=['GET', 'POST'])
 def message():
   resp = twilio.twiml.Response()
   account_sid = os.environ.get("ACCOUNT_SID", ACCOUNT_SID)
@@ -90,13 +90,17 @@ def message():
   global message_txt
   message_txt = request.values.get('Body')
   #message = client.messages.create(to=to_val, from_=from_value, body=body_txt)
-  try:
-    resp.dial(to_val, callerId=caller_id)
-    #client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/voice")
-    resp.say(message_txt, voice='alice')
-  except Exception as e:
-    app.logger.error(e)
-    return jsonify({'error': str(e)})  
+  if request.method == 'POST':
+    try:
+      resp.dial(to_val, callerId=caller_id)
+      #client.calls.create(from_=from_value,to=to_val,url="https://still-taiga-4190.herokuapp.com/voice")
+      resp.say(message_txt, voice='alice')
+    except Exception as e:
+      app.logger.error(e)
+      return jsonify({'error': str(e)}) 
+  elif request.method == 'GET':
+      resp.dial(to_val, callerId=caller_id)
+      resp.say(message_txt, voice='alice')
 
   #resp.message(body_txt)
   return str(resp)
